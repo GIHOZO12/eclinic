@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-       "corsheaders",
-    'rest_framework'
+    'corsheaders',
+    'rest_framework',
+    'caredash'
    
 ]
 
@@ -129,4 +130,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-MODEL_USER_AUTH='api.User'
+MODEL_USER_AUTH='caredash.User'

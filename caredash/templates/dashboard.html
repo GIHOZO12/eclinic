@@ -1,0 +1,123 @@
+{% extends "main.html" %}
+
+{% block title %}Dashboard | eClinic{% endblock %}
+
+{% block content %}
+<!-- Adjust the left padding to match the sidebar width -->
+<div class="container-fluid mt-4 pl-5" style="margin-left: 250px;">
+    <h2 class="mb-4">Dashboard</h2>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Total Users</h5>
+                            <h3>1,250</h3>
+                        </div>
+                        <i class="fas fa-users fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Active Cases</h5>
+                            <h3>320</h3>
+                        </div>
+                        <i class="fas fa-heartbeat fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">New Reports</h5>
+                            <h3>75</h3>
+                        </div>
+                        <i class="fas fa-file-medical-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-danger">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title">Critical Alerts</h5>
+                            <h3>5</h3>
+                        </div>
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Chart -->
+    <div class="row mt-4">
+        <!-- Recent Activity -->
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><i class="fas fa-user text-primary"></i> John Doe reported fever symptoms.</li>
+                        <li class="list-group-item"><i class="fas fa-user text-primary"></i> A new health alert was issued for District 3.</li>
+                        <li class="list-group-item"><i class="fas fa-user text-primary"></i> System detected a flu outbreak in Kigali.</li>
+                        <li class="list-group-item"><i class="fas fa-user text-primary"></i> 5 new users registered today.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Placeholder -->
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Disease Trends</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="diseaseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js for Graph -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('diseaseChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Reported Cases',
+                data: [50, 70, 80, 120, 150, 180],
+                borderColor: 'red',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <style>
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #343a40;
+            color: rgb(122, 70, 70);
+            position: fixed;
+            padding-top: 20px;
+            transition: width 0.3s;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .sidebar a i {
+            margin-right: 10px;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+            padding-left: 25px;
+        }
+        .sidebar h4 {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #495057;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4>eClinic</h4>
+        <a href=""><i class="fas fa-home"></i> Dashboard</a>
+        <a href=""><i class="fas fa-notes-medical"></i> Symptoms</a>
+        <a href=""><i class="fas fa-chart-line"></i> Disease Trends</a>
+        <a href=""><i class="fas fa-bell"></i> Notifications</a>
+        <a href="" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            let sidebar = document.querySelector('.sidebar');
+            let content = document.querySelector('.content');
+            if (sidebar.style.width === "60px") {
+                sidebar.style.width = "250px";
+                content.style.marginLeft = "250px";
+            } else {
+                sidebar.style.width = "60px";
+                content.style.marginLeft = "60px";
+            }
+        }
+    </script>
+
+</body>
+</html>

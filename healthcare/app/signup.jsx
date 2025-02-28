@@ -1,40 +1,75 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
-const { width, height } = Dimensions.get('window'); // Get the window size to make it responsive
+const { width, height } = Dimensions.get('window');
 
-const SignUpPage = () => {
+const SignupPage = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const navigation = useNavigation();
+  const [username, setUsername] = useState('');
+  const router = useRouter();
 
-  const handleSignUp = () => {
+  const handleSignup = async () => {
+    if (!email || !password || !username) {
+      Alert.alert('Error', 'All fields are required.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
     setLoading(true);
-    // Simulate a loading delay before navigating
-    setTimeout(() => {
-      navigation.replace('login'); // Navigate to the tab screens after signup
-    }, 1000);
+
+    try {
+      const response = await fetch('http://172.31.201.93:8000/api/register/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.access && data.refresh) {
+          await SecureStore.setItemAsync('access_token', data.access);
+          await SecureStore.setItemAsync('refresh_token', data.refresh);
+
+          Alert.alert('Success', 'Account created successfully! Please log in.');
+          router.replace('/login'); // Navigate to login page
+        } else {
+          Alert.alert('Error', 'Unexpected server response.');
+        }
+      } else {
+        Alert.alert('Error', data.error || 'Signup failed. Try again.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create Your Account</Text>
+      <Text style={styles.title}>Create an Account</Text>
 
       <View style={styles.formContainer}>
-        {/* Email Inp
-        ut */}
-
-<TextInput
+        {/* Username Input */}
+        <TextInput
           style={styles.input}
-          placeholder="username"
+          placeholder="Username"
           placeholderTextColor="#7a7a7a"
           value={username}
           onChangeText={setUsername}
         />
+
+        {/* Email Input */}
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -63,19 +98,27 @@ const SignUpPage = () => {
           onChangeText={setConfirmPassword}
         />
 
-        {/* Sign Up Button */}
+        {/* Signup Button */}
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleSignUp}
+          onPress={handleSignup}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>
-            {loading ? 'Loading...' : 'Sign Up'}
-          </Text>
+          <Text style={styles.buttonText}>{loading ? 'Signing Up...' : 'Sign Up'}</Text>
         </TouchableOpacity>
 
         {/* Loading Text */}
         {loading && <Text style={styles.loadingText}>Please wait...</Text>}
+
+        {/* Already have an account? */}
+        <View style={styles.loginContainer}>
+          <Text style={styles.loginText}>
+            Already have an account?{' '}
+            <Text style={styles.loginLink} onPress={() => router.replace('/login')}>
+              Log In
+            </Text>
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -144,6 +187,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
   },
+  loginContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  loginText: {
+    fontSize: 16,
+  },
+  loginLink: {
+    color: '#007BFF',
+    fontWeight: 'bold',
+  },
 });
 
-export default SignUpPage;
+export default SignupPage;

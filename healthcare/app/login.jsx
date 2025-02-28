@@ -1,32 +1,46 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router'; // Use expo-router for navigation
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 
-const { width, height } = Dimensions.get('window'); // Get the window size to make it responsive
+const { width, height } = Dimensions.get('window');
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); // Using expo-router's useRouter hook
+  const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
 
-    
-    setTimeout(() => {
-        router.replace('/(tabs)'); // Navigate to the tabs layout (correct path)
-    }, 1000);
-  };
+    try {
+      const response = await fetch('http://172.31.201.93:8000/api/login/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const handleForgotPassword = () => {
-    // Navigate to the forgot password screen
-    router.push('forgotPassword'); // You should have a `forgotPassword.js` file in your routes
-  };
+      const data = await response.json();
 
-  const handleSignUp = () => {
-    // Navigate to the signup page
-    router.push('signup'); // You should have a `signup.js` file in your routes
+      if (response.ok) {
+        if (data.access && data.refresh) {
+          await SecureStore.setItemAsync('access_token', data.access);
+          await SecureStore.setItemAsync('refresh_token', data.refresh);
+
+          Alert.alert('Success', 'Login successful');
+          router.replace('/(tabs)'); // Navigate to main app
+        } else {
+          Alert.alert('Error', 'Invalid response from server.');
+        }
+      } else {
+        Alert.alert('Error', data.error || 'Invalid credentials');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,16 +73,14 @@ const LoginPage = () => {
           onPress={handleLogin}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>
-            {loading ? 'Loading...' : 'Login'}
-          </Text>
+          <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Login'}</Text>
         </TouchableOpacity>
 
         {/* Loading Text */}
         {loading && <Text style={styles.loadingText}>Please wait...</Text>}
 
         {/* Forgot Password */}
-        <TouchableOpacity onPress={handleForgotPassword}>
+        <TouchableOpacity onPress={() => router.push('forgotPassword')}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -76,7 +88,7 @@ const LoginPage = () => {
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>
             New to the app?{' '}
-            <Text style={styles.signupLink} onPress={handleSignUp}>
+            <Text style={styles.signupLink} onPress={() => router.push('signup')}>
               Sign Up
             </Text>
           </Text>
@@ -93,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f4f8fc', // Light background color for a clean look
+    backgroundColor: '#f4f8fc',
   },
   title: {
     fontSize: 24,
@@ -102,11 +114,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: 'center',
     width: '80%',
-    lineHeight: 32,
   },
   formContainer: {
     width: '100%',
-    maxWidth: 400, // Limit max width to avoid stretching too much on larger screens
+    maxWidth: 400,
     padding: 20,
     borderRadius: 10,
     backgroundColor: '#fff',
@@ -114,7 +125,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    elevation: 5, // For Android shadow effect
+    elevation: 5,
   },
   input: {
     width: '100%',
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonDisabled: {
-    backgroundColor: '#cccccc', // Gray out the button when loading
+    backgroundColor: '#cccccc',
   },
   loadingText: {
     fontSize: 16,

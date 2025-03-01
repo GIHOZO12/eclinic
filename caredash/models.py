@@ -39,6 +39,31 @@ class Notification(models.Model):
     sent_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
+<<<<<<< HEAD
         return f"Notification sent to {self.recipients.count()} users"    
+=======
+        return self.message   
+    
+class Home(models.Model):
+    title=models.CharField(max_length=200)
+    image=models.ImageField(upload_to='home')
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.title
+
+
+class Welcomepage(models.Model):
+    title=models.CharField(max_length=200)
+    image=models.ImageField(upload_to='welcomepage')
+    def __str__(self):
+        return self.title
+
+
+
+
+
+
+
+>>>>>>> 498ae66d658e9ccfcc1b18f23246d716f4c6c9bb
 
 

@@ -52,10 +52,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class HomeSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()  # Add this line
+
     class Meta:
         model = Home
-        fields = ["id","title","image"]
-        extra_kwargs = {"id":{"read_only":True}}
-        
+        fields = ["id", "title", "image"]
+        extra_kwargs = {"id": {"read_only": True}}
+
+    def get_image(self, obj):
+        # Build the full URL for the image
+        request = self.context.get('request')
+        if obj.image and hasattr(obj.image, 'url'):
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
 
 

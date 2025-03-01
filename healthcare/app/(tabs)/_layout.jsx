@@ -65,19 +65,25 @@ const _layout = () => {
           tabBarIcon: ({ color, size }) => <Ionicons name="pulse-outline" size={size} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="doctors"
-        options={{
-          title: 'doctors',
-          headerShown: true,
-          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
-        }}
-      />
+    <Tabs.Screen
+  name="doctors"
+  options={{
+    title: 'Add Symptoms',
+    headerShown: true,
+    tabBarIcon: ({ color, size }) => (
+      <Ionicons name="medkit-outline" size={size} color={color} /> // Replace with your chosen icon
+    ),
+  }}
+/>
       <Tabs.Screen
         name="contact"
         options={{
+
           title: 'contact',
           tabBarIcon: ({ color, size }) => <Ionicons name="mail-outline" size={size} color={color} />,
+
+          title: 'Account',
+          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
         }}
       />
     </Tabs>

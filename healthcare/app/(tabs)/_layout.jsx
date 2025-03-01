@@ -1,48 +1,61 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
 
 const _layout = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const router=useRouter()
 
-  
+  const fetchUserInfo = async () => {
+    try {
+      const token = await SecureStore.getItemAsync('access_token'); 
+      if (!token) {
+        console.error('No access token found');
+        return;
+      }
+
+      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to fetch user info');
+      }
+
+      const data = await response.json();
+      setUserInfo(data);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };
+
   useEffect(() => {
-   
-    const fetchUserInfo = async () => {
-      // Simulating an API call
-      const user = await getUserDataFromBackend();
-      setUserInfo(user);
-    };
-
     fetchUserInfo();
   }, []);
-
-  // Simulated backend function
-  const getUserDataFromBackend = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ name: 'John Doe', email: 'john.doe@example.com' });
-      }, 1000);
-    });
-  };
 
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: styles.tabBarStyle,
         tabBarActiveTintColor: '#007aff',
-        headerTitle:false,
+        headerTitle: false,
         tabBarInactiveTintColor: '#8e8e93',
         headerStyle: styles.headerStyle,
         headerTintColor: '#fff',
         headerTitleStyle: styles.headerTitleStyle,
         headerRight: () => (
-          <TouchableOpacity style={styles.profileButton}>
+          <TouchableOpacity style={styles.profileButton} onPress={()=>router.push('contact')}>
             <Ionicons name="person-circle-outline" size={30} color="#fff" />
             {userInfo && (
               <View style={styles.profileTextContainer}>
-                <Text style={styles.profileName}>{userInfo.name}</Text>
+                <Text style={styles.profileName}>{userInfo.username}</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -76,7 +89,7 @@ const _layout = () => {
       <Tabs.Screen
         name="contact"
         options={{
-          title: 'contact',
+          title: 'Contact',
           tabBarIcon: ({ color, size }) => <Ionicons name="mail-outline" size={size} color={color} />,
         }}
       />

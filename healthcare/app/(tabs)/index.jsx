@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 're
 import React, { useEffect, useState } from 'react';
 import clinic from '../../assets/images/project/clinic.jpg';
 
-const BASE_URL = 'http://10.224.110.245:8000'; // Update this to your API's base URL
+const BASE_URL = 'http://10.224.110.245:8000'; // Your API base URL
 
 const Index = () => {
   const [data, setData] = useState([]);
@@ -48,16 +48,25 @@ const Index = () => {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Welcome to the AI based e-Clinic</Text>
-      <Image source={clinic} style={styles.image} />
-      <Text style={{ margin: 20 }}>Get good health and easy access to medical services</Text>
+      {/* <Image source={clinic} style={styles.image} />
+      <Text style={{ margin: 20 }}>Get good health and easy access to medical services</Text> */}
 
-      {data.map((item) => (
-        <View key={item.id} style={styles.dataContainer}>
-          <Text style={styles.dataTitle}>{item.title}</Text>
-          {/* Construct the full image URL */}
-          <Image source={{ uri: `${BASE_URL}${item.image}` }} style={styles.dataImage} />
-        </View>
-      ))}
+      {data.map((item) => {
+        const imageUrl = item.image; // Use the full URL directly from the API response
+        console.log('Image URL:', imageUrl); // Log the full image URL
+
+        return (
+          <View key={item.id} style={styles.dataContainer}>
+            <Image
+              source={{ uri: imageUrl }}
+              style={styles.dataImage}
+              onError={() => console.log('Image failed to load:', imageUrl)}
+            />
+            <Text style={styles.dataTitle}>{item.title}</Text>
+            
+          </View>
+        );
+      })}
     </ScrollView>
   );
 };
@@ -87,12 +96,12 @@ const styles = StyleSheet.create({
   dataContainer: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     borderRadius: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 3,
+    // shadowColor: '#000',
+    // shadowOpacity: 0.2,
+    // shadowRadius: 5,
+    // elevation: 3,
     alignItems: 'center', // Center items in the data container
   },
   dataTitle: {

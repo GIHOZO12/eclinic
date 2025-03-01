@@ -124,8 +124,8 @@ def update_profile(request):
 @api_view(["GET"])
 def home(request):
     try:
-        home_info = Home.objects.all()
-        serializer = HomeSerializer(home_info, many=True)
+        home_info = Home.objects.all().order_by('-created_at')[:10]  # Get the latest home info
+        serializer = HomeSerializer(home_info, many=True, context={'request': request})  # Pass the request context
         return Response(serializer.data)
     except Home.DoesNotExist:
         return Response({"error": "Home not found"}, status=404)

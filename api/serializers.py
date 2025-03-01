@@ -1,5 +1,5 @@
 from rest_framework import  serializers
-from caredash.models import SymptomReport,Notification,User
+from caredash.models import SymptomReport,Notification,User,Home
 
 
 class SymptomReportSerializer(serializers.ModelSerializer):
@@ -50,5 +50,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
+
+class HomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Home
+        fields = ["id","title","image"]
+        extra_kwargs = {"id":{"read_only":True}}
+        
 
 

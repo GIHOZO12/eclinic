@@ -20,7 +20,7 @@ const ContactForm = () => {
         return;
       }
 
-      const response = await fetch('http://172.31.201.93:8000/api/user_info/', {
+      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -63,7 +63,7 @@ const ContactForm = () => {
         return;
       }
 
-      const submitData = await fetch("http://172.31.201.93:8000/api/notifications/", {
+      const submitData = await fetch("http://10.224.110.245:8000/api/notifications/", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

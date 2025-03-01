@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User,DiseaseDetection,SymptomReport,Notification,Welcomepage
+from .models import User,DiseaseDetection,SymptomReport,Notification,Welcomepage,Home
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -39,6 +39,13 @@ class NotificationAdmin(admin.ModelAdmin):
 @admin.register(Welcomepage)
 
 class WelcomepageAdmin(admin.ModelAdmin):
+    list_display = ('title','image')
+    search_fields = ('title',)
+    list_per_page = 20
+
+
+@admin.register(Home)
+class HomeAdmin(admin.ModelAdmin):
     list_display = ('title','image')
     search_fields = ('title',)
     list_per_page = 20

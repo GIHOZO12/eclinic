@@ -19,7 +19,7 @@ const Doctors = () => {
         return;
       }
 
-      const response = await fetch('http://172.31.201.93:8000/api/user_info/', {
+      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -69,7 +69,7 @@ const Doctors = () => {
 
     try {
       const token = await SecureStore.getItemAsync('access_token'); // Retrieve token
-      const response = await fetch("http://172.31.201.93:8000/api/symptomreport/", {
+      const response = await fetch("http://10.224.110.245:8000/api/symptomreport/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -16,7 +16,7 @@ const _layout = () => {
         return;
       }
 
-      const response = await fetch('http://172.31.201.93:8000/api/user_info/', {
+      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

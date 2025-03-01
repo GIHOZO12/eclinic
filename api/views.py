@@ -6,7 +6,8 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from api.serializers import SymptomReportSerializer,NotificationSerializer,UserSerializer
+from api.serializers import SymptomReportSerializer,NotificationSerializer,UserSerializer,HomeSerializer
+from caredash.models import Home
 
 # Create your views here.
 
@@ -117,6 +118,21 @@ def update_profile(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+def home(request):
+    try:
+        home_info = Home.objects.all()
+        serializer = HomeSerializer(home_info, many=True)
+        return Response(serializer.data)
+    except Home.DoesNotExist:
+        return Response({"error": "Home not found"}, status=404)
+    
+
+
+
     
 
 

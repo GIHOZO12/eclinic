@@ -42,6 +42,12 @@ class Notification(models.Model):
     def __str__(self):
         return self.message   
     
+class Home(models.Model):
+    title=models.CharField(max_length=200)
+    image=models.ImageField(upload_to='home')
+    def __str__(self):
+        return self.title
+
 
 class Welcomepage(models.Model):
     title=models.CharField(max_length=200)

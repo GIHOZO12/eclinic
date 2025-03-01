@@ -17,4 +17,5 @@ urlpatterns = [
     path("symptomreport/", views.deseasesreport, name="symptom_report"),
     path("notifications/", views.notifications, name="notifications"),
     path("update_profile/", views.update_profile, name="update_profile"),
+    path("home/", views.home, name="home"),
 ]

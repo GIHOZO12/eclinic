@@ -21,7 +21,7 @@ import {
   
     const fetchUserData = async () => {
       const token = await SecureStore.getItemAsync('access_token');
-      const response = await fetch('http://172.31.201.93:8000/api/user_info/', {
+      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

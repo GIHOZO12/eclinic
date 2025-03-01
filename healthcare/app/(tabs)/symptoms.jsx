@@ -15,7 +15,7 @@ const Symptoms = () => {
       const symptomsToSend = symptomText.split(",").map(s => s.trim()); // Ensure symptoms are sent as a list
       console.log("Sending Symptoms:", symptomsToSend); // Debugging log
   
-      const response = await fetch("http://10.224.110.245:8000/api/analyze_disease/", {
+      const response = await fetch("http://172.31.201.93:8000/api/analyze_disease/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ symptoms: symptomsToSend }),  // Send as a list

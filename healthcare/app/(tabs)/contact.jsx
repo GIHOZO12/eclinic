@@ -1,143 +1,131 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet,Image, Dimensions, ScrollView } from 'react-native';
-import React, { useState,useEffect } from 'react';
-import { profile } from '../../components/user_info';
-import ContactForm from '../profile_info';
-import ResultsInfo from '../results';
-import Edit_profille from '../edit_profille';
-import * as SecureStore from 'expo-secure-store';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
 
-const { width } = Dimensions.get('window');
+const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
-const Contact = () => {
-  const [activeId, setActiveId] = useState(null);
-  const [data, setData] = useState(null);
-  const [userInfo, setUserInfo] = useState({});
-
-
-
-
-
-
-  const fetchUserInfo = async () => {
-    try {
-      const token = await SecureStore.getItemAsync('access_token'); 
-      if (!token) {
-        console.error('No access token found');
-        return;
-      }
-
-      const response = await fetch('http://10.224.110.245:8000/api/user_info/', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch user info');
-      }
-
-      const data = await response.json();
-      setUserInfo(data);
-    } catch (error) {
-      console.error('Error:', error.message);
+  const handleSubmit = () => {
+    if (!name || !email || !message) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
     }
-  };
 
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
-
-
-
-
-
-  const handleData = (selectedItem) => {
-    console.log('Selected Item:', selectedItem); // Debugging
-    if (selectedItem === 'yourdata') {
-      setData(<ResultsInfo />);
-    } else if (selectedItem === 'contact') {
-      setData(<ContactForm />);
-    }
-    else if (selectedItem === 'edit profile') {
-      setData(<Edit_profille />);
-    }
-    
+    Alert.alert('Thank You!', 'Your message has been submitted.');
+    setName('');
+    setEmail('');
+    setMessage('');
   };
 
   return (
     <View style={styles.container}>
-      <View style={{}}>
-      <Image source='' alt='Profile Image' style={styles.profileImage} />
-      <Text style={styles.header}>{userInfo.username}</Text>
-     
+      <View style={styles.card}>
+        <Text style={styles.title}>Contact Us</Text>
+        <Text style={styles.description}>
+          Tell us about the challenges you face and what we can improve!
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Your Name"
+          placeholderTextColor="#888"
+          value={name}
+          onChangeText={setName}
+        />
+        
+        <TextInput
+          style={styles.input}
+          placeholder="Your Email"
+          placeholderTextColor="#888"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+        
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Your Message"
+          placeholderTextColor="#888"
+          multiline
+          numberOfLines={4}
+          value={message}
+          onChangeText={setMessage}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>send message</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Scrollable Horizontal List (Always Visible) */}
-      <FlatList
-        data={profile}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer} 
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              console.log('Item pressed:', item.title); // Debugging
-              setActiveId(item.id); 
-              handleData(item.title.toLowerCase());
-            }}
-            style={styles.itemWrapper}
-          >
-            <View style={styles.itemContainer}>
-              <Text style={[styles.itemText, activeId === item.id && styles.activeText]}>
-                {item.title}
-              </Text>
-              {activeId === item.id && <View style={styles.activeIndicator} />}
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* Dynamic Content (Below Titles) */}
-      <ScrollView style={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        {data}
-      </ScrollView>
     </View>
   );
 };
 
-export default Contact;
-
 const styles = StyleSheet.create({
   container: {
-      margin:20
-   },
-  itemContainer: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    minWidth: width * 0.3, 
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f0f2f5',
   },
-  itemText: {
-    fontSize: 18,
-    color: '#333',
+  card: {
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  activeText: {
+  title: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#007aff',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
   },
-   activeIndicator: {
-    marginTop: 5,
-    height: 3,
-    width: '80%',
-    backgroundColor: '#007aff',
-    alignSelf: 'center',
-    borderRadius: 2,
+  description: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 15,
   },
-  
+  input: {
+    width: '100%',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    fontSize: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+  },
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+    shadowColor: '#007bff',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
+export default ContactForm;

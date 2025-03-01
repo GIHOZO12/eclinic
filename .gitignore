@@ -1,2 +1,4 @@
 /menv
-/env
+media/models/disease_model.pkl
+media/datasets/disease_symptoms.csv
+

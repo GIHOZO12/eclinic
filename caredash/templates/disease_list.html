@@ -1,0 +1,37 @@
+{% extends "main.html" %}
+
+{% block title %}Disease Predictions{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="margin-left: 250px;">
+    <h2 class="mb-4">Diseases Based on Current Symptoms</h2>
+
+    <div class="alert alert-info">
+        <strong>Currently Reported Symptoms:</strong> 
+        {% for symptom in current_symptoms %}
+            <span class="badge bg-primary">{{ symptom }}</span>
+        {% endfor %}
+    </div>
+
+    <h4>Debug: Matched Diseases Count = {{ matched_diseases|length }}</h4> <!-- Debugging Line -->
+
+    {% if matched_diseases %}
+        <div class="row">
+            {% for disease in matched_diseases %}
+            <div class="col-md-4">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger">{{ disease.name }}</h5>
+                        <p><strong>Common Symptoms:</strong> {{ disease.common_symptoms }}</p>
+                        <p><strong>Detected Cases:</strong> {{ disease.detected_cases }}</p>
+                        <p><strong>Location:</strong> {{ disease.location }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No diseases match the currently reported symptoms.</p>
+    {% endif %}
+</div>
+{% endblock %}
